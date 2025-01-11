@@ -10,7 +10,7 @@
           :interval="4000"
           :show-arrow="true"
         >
-          <n-carousel-item v-for="item in carouselData" :key="item.id">
+          <n-carousel-item v-for="item in carouselItems" :key="item.id">
             <div class="carousel-item">
               <img :src="item.imageUrl" :alt="item.title">
               <div class="carousel-text">
@@ -29,12 +29,14 @@
         <n-card class="ranking-card" :bordered="false">
           <template #header>
             <div class="card-header">
-              <AppIcon :icon="TrophyOutline" :size="24" color="#1890ff" />
+              <n-icon size="24" color="#1890ff">
+                <TrophyOutline />
+              </n-icon>
               <span class="header-text">课程排行榜</span>
             </div>
           </template>
           <n-list hoverable clickable>
-            <n-list-item v-for="(item, index) in rankingData" :key="item.id">
+            <n-list-item v-for="(item, index) in rankingItems" :key="item.id">
               <n-thing>
                 <template #header>
                   <div class="ranking-item">
@@ -47,7 +49,9 @@
                 <template #description>
                   <div class="rank-info">
                     <span class="rank-views">
-                      <AppIcon :icon="TimeOutline" :size="16" />
+                      <n-icon size="16">
+                        <TimeOutline />
+                      </n-icon>
                       {{ item.views }}次学习
                     </span>
                     <n-rate readonly size="small" :value="item.rating" />
@@ -63,10 +67,18 @@
 </template>
 
 <script setup lang="ts">
-import { ref } from 'vue'
-import { BookOutline, HomeOutline, ListOutline, StarOutline, TimeOutline, TrophyOutline } from '@vicons/ionicons5'
-import AppIcon from '../../components/AppIcon.vue'
-import { carouselData, rankingData } from '../../mock/homeData'
+import { ref, onMounted } from 'vue'
+import { TimeOutline, TrophyOutline } from '@vicons/ionicons5'
+import { getCarouselList, getRankingList } from '@/utils/service'
+import type { CarouselItem, RankingItem } from '@/mock/types'
+
+const carouselItems = ref<CarouselItem[]>([])
+const rankingItems = ref<RankingItem[]>([])
+
+onMounted(async () => {
+  carouselItems.value = await getCarouselList()
+  rankingItems.value = await getRankingList()
+})
 </script>
 
 <style scoped>

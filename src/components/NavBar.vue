@@ -38,11 +38,12 @@
 
 <script setup lang="ts">
 import { h } from 'vue'
-import { useRouter } from 'vue-router'
+// 只在实际使用路由跳转时才导入 useRouter
+// import { useRouter } from 'vue-router'
 import { BookOutline, HomeOutline, ListOutline, StarOutline } from '@vicons/ionicons5'
 import { useMessage } from 'naive-ui'
 
-const router = useRouter()
+// const router = useRouter()  // 暂时注释掉未使用的变量
 const message = useMessage()
 
 const userOptions = [

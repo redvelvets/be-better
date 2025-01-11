@@ -9,7 +9,7 @@
       <n-card :bordered="false" class="table-card">
         <n-data-table
           :columns="columns"
-          :data="myPlans"
+          :data="myPlanList"
           :bordered="false"
           :single-line="false"
           :row-class-name="rowClassName"
@@ -20,9 +20,10 @@
 </template>
 
 <script setup lang="ts">
-import { h, ref } from 'vue'
+import { h, ref, onMounted } from 'vue'
 import { NTag, NProgress, NButton, NSpace } from 'naive-ui'
-import AppIcon from '../../components/AppIcon.vue'
+import type { MyPlan } from '@/mock/types'
+import { getMyPlans } from '@/utils/service'
 
 const columns = [
   {
@@ -98,29 +99,11 @@ const columns = [
   }
 ]
 
-const myPlans = ref([
-  {
-    id: 1,
-    title: 'Web前端开发路线',
-    startDate: '2024-03-01',
-    progress: 30,
-    status: '进行中'
-  },
-  {
-    id: 2,
-    title: 'Python基础教程',
-    startDate: '2024-02-15',
-    progress: 60,
-    status: '进行中'
-  },
-  {
-    id: 3,
-    title: 'JavaScript高级教程',
-    startDate: '2024-01-01',
-    progress: 100,
-    status: '已完成'
-  }
-])
+const myPlanList = ref<MyPlan[]>([])
+
+onMounted(async () => {
+  myPlanList.value = await getMyPlans()
+})
 
 const rowClassName = (row: any) => {
   return row.status === '已完成' ? 'completed-row' : ''

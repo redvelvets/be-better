@@ -16,7 +16,9 @@
     "src/**/*.ts",
     "src/**/*.d.ts",
     "src/**/*.tsx",
-    "src/**/*.vue"
+    "src/**/*.vue",
+    "src/mock/*.js",
+    "src/types/**/*.d.ts"
   ],
   "exclude": ["src/**/__tests__/*"]
 }

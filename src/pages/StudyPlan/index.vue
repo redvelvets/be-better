@@ -2,7 +2,7 @@
   <div class="container">
     <div class="content">
       <div class="bookshelf">
-        <div v-if="studyPlans.length === 0" class="empty-shelf">
+        <div v-if="studyPlanList.length === 0" class="empty-shelf">
           <n-empty>
             <template #extra>
               <n-button type="primary" size="large" @click="showAddPlanModal = true">
@@ -17,7 +17,7 @@
         
         <div v-else class="books-container">
           <div
-            v-for="plan in studyPlans"
+            v-for="plan in studyPlanList"
             :key="plan.id"
             class="book"
             @click="goToPlanDetail(plan.id)"
@@ -97,32 +97,26 @@
 </template>
 
 <script setup lang="ts">
-import { ref } from 'vue'
+import { ref, onMounted } from 'vue'
 import { useRouter } from 'vue-router'
 import { useMessage } from 'naive-ui'
 import { AddOutline, AddCircleOutline } from '@vicons/ionicons5'
+import type { StudyPlan } from '@/mock/types'
+import { getStudyPlans } from '@/utils/service'
 
 const router = useRouter()
 const message = useMessage()
 
 // 学习计划数据
-const studyPlans = ref([
-  {
-    id: 1,
-    title: 'Python基础入门',
-    description: 'Python编程基础学习计划',
-    progress: 30,
-    color: '#1890ff',
-    days: [
-      { day: 1, title: '初识Python', completed: true },
-      { day: 2, title: '基础语法', completed: false }
-    ]
-  }
-])
+const studyPlanList = ref<StudyPlan[]>([])
+
+onMounted(async () => {
+  studyPlanList.value = await getStudyPlans()
+})
 
 // 模态框控制
 const showAddPlanModal = ref(false)
-const formRef = ref(null)
+const formRef = ref<any>(null)
 const formModel = ref({
   title: '',
   description: '',
@@ -164,7 +158,7 @@ const handleAddPlan = () => {
           completed: false
         }))
       }
-      studyPlans.value.push(newPlan)
+      studyPlanList.value.push(newPlan)
       showAddPlanModal.value = false
       message.success('添加成功')
       formModel.value = {
